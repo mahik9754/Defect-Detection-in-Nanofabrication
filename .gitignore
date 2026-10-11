@@ -1,0 +1,6 @@
+dataset/raw/
+dataset/processed_original/
+dataset/processed_filtered/
+models/
+__pycache__/
+*.pyc
