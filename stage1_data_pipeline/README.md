@@ -1,101 +1,140 @@
-# Stage 1 — Data Integrity, Expert Masks, and Shared Inference
+# Stage 1 — Data Pipeline, Masks, and Shared Inference
 
 ## 1. Purpose
 
-This module supports the SEM-Based Wafer-Defect Classification project by preparing the Carinthia-S image-mask data for subsequent region-based experiments.
+This module prepares the data and shared utilities for the SEM wafer-defect shortcut-learning audit.
 
-It provides dataset audit results, image-mask metadata, reusable mask utilities, and a common inference interface for the existing six-class MobileNetV2 classifier.
+It provides:
+- Dataset and image-mask audit outputs.
+- A manifest linking SEM images to their expert masks.
+- Region extraction for original, defect-only, and background-only inputs.
+- An inference interface returning the predicted class, confidence, and six-class probabilities.
+- Reproduction instructions and documented limitations for the next project stage.
 
-The original baseline training pipeline, checkpoints, results, class mapping, and train/validation/test assignments must be preserved.
+The original training pipeline and baseline results should remain unchanged.
 
-## 2. Project Structure
+## 2. Required project structure
 
-```text
-stage1_data_pipeline/
-├── __init__.py
-├── audit_dataset.py
-├── mask_utils.py
-├── inference.py
-├── data_audit.csv
-├── mask_manifest.csv
-├── duplicate_split_conflicts.csv
-├── examples/
-└── README.md
-```
+Run the commands in this README from the **project root**, which contains `config.py` and `preprocessing.py`.
 
-The existing project files remain in the repository root, including `config.py`, `preprocessing.py`, `model_builder.py`, and `train_model.py`.
-
-## 3. Dataset
-
-The additional dataset is Carinthia-S, stored at:
+Expected structure:
 
 ```text
-dataset/carinthia_s/raw/
-├── images/
-├── masks/
-└── carinthia-s.csv
+Defect-Detection-in-Nanofabrication/
+├── config.py
+├── preprocessing.py
+├── model_builder.py
+├── train_model.py
+├── dataset/
+│   └── carinthia_s/
+│       └── raw/
+│           ├── images/
+│           ├── masks/
+│           └── carinthia-s.csv
+└── stage1_data_pipeline/
+    ├── __init__.py
+    ├── audit_dataset.py
+    ├── mask_utils.py
+    ├── inference.py
+    ├── region_extraction.py
+    ├── data_audit.csv
+    ├── mask_manifest.csv
+    ├── duplicate_split_conflicts.csv
+    ├── examples/
+    └── README.md
 ```
 
-The metadata CSV is semicolon-delimited and contains the fields `image_path`, `mask_path`, `filename`, and `label`.
+The dataset and example files shown above may be excluded from the Git repository due to size or redistribution restrictions. If the dataset is not committed, each team member must obtain an authorized copy and place it in the documented location.
 
-The dataset contains 4,591 image-mask records across six labels.
+**Dataset path distinction:** the original project configuration uses `dataset/raw/` for its baseline pipeline. The new Stage 1 audit and region-extraction commands use `dataset/carinthia_s/raw/`. Do not move or rename the original baseline data without coordinating with the team.
 
-## 4. Data Audit
+## 3. Dataset and manifest
 
-Run the audit from the project root:
+The Carinthia-S CSV uses a semicolon (`;`) delimiter and contains the following columns:
 
-```bash
-python -m stage1_data_pipeline.audit_dataset
+- `image_path`
+- `mask_path`
+- `filename`
+- `label`
+
+The dataset audit generated the following files:
+
+| File | Purpose |
+|---|---|
+| `data_audit.csv` | Per-record audit results |
+| `mask_manifest.csv` | Image-mask associations and mask metadata |
+| `duplicate_split_conflicts.csv` | Duplicate entries potentially crossing data splits |
+
+### Recorded audit summary
+
+- CSV records: 4,591
+- Audit status: 4,591 records marked `ok`
+- Image-mask pairs aligned in dimensions: 4,591 / 4,591
+- Exact duplicate image entries: 0
+- Duplicate split conflicts: 0
+- Empty masks: 226; all belong to class 6 in the audited data
+- Full masks: 0
+- Masks with intermediate grayscale values: 395
+- Baseline split availability: train 3,215; validation 688; test 688
+
+These are the recorded audit results. Empty masks are consistent with the class-6 no-defect examples; they should not automatically be treated as errors.
+
+## 4. Region extraction
+
+`region_extraction.py` generates controlled image inputs using an SEM image and its corresponding defect mask.
+
+### Conditions
+
+- **Original:** the unchanged source image.
+- **Defect-only:** retains pixels where the defect mask is nonzero; all other pixels are black.
+- **Background-only:** retains pixels where the defect mask is zero; the masked region is black.
+- **Artifact-focused:** retains pixels inside a separately supplied artifact mask. This requires an artifact annotation mask; the defect mask is not automatically treated as an artifact mask.
+
+The current implementation interprets every nonzero mask pixel as foreground. Since some masks contain intermediate grayscale values, this convention remains provisional until the mask encoding and intended semantics are confirmed.
+
+### Command
+
+From the project root, run:
+
+```cmd
+python -m stage1_data_pipeline.region_extraction --image "dataset/carinthia_s/raw/images/0c8af9b8e62f4cb498392e806236e5e0.jpg" --mask "dataset/carinthia_s/raw/masks/0c8af9b8e62f4cb498392e806236e5e0.png"
 ```
 
-The audit generates:
+Replace the example filenames with the image and corresponding mask you want to process.
 
-- `data_audit.csv` — record-level validation results.
-- `mask_manifest.csv` — image-mask dimensions, mask statistics, hashes, labels, and baseline split assignments.
-- `duplicate_split_conflicts.csv` — detected exact-image duplicates assigned to different baseline splits.
-- `examples/` — representative image, mask, and overlay visualizations.
+The script saves three PNG files in:
 
-### Recorded audit results
+```text
+stage1_data_pipeline/region_examples/
+```
 
-| Check | Result |
-|---|---:|
-| Metadata records | 4,591 |
-| Records passing structural audit | 4,591 |
-| Aligned image-mask pairs | 4,591 |
-| Exact duplicate image entries | 0 |
-| Duplicate split conflicts | 0 |
-| Empty masks | 226 |
-| Masks with intermediate grayscale values | 395 |
+The output filenames end with `_original.png`, `_defect_only.png`, and `_background_only.png`.
 
-All 226 empty masks belong to class 6, which represents the no-defect class in this project.
+An optional artifact mask can be supplied with `--artifact-mask`, provided it is a separate, correctly aligned annotation:
 
-The existing baseline split availability is:
+```cmd
+python -m stage1_data_pipeline.region_extraction --image "PATH_TO_IMAGE" --mask "PATH_TO_DEFECT_MASK" --artifact-mask "PATH_TO_ARTIFACT_MASK"
+```
 
-| Split | Images |
-|---|---:|
-| Training | 3,215 |
-| Validation | 688 |
-| Test | 688 |
+Masked-out pixels are black. This can introduce distribution shift, so changes in model predictions should not be interpreted as proof of causal shortcut reliance.
 
-These split assignments must not be changed for the new experiments.
+## 5. Shared inference interface
 
-**Interpretation:** The audit establishes structural consistency, readability, and image-mask dimension alignment. It does not, by itself, prove that every mask correctly identifies a defect or establish the semantic meaning of every pixel value.
+`inference.py` provides a common interface for loading a trained model and predicting one SEM image.
 
-## 5. Mask Handling
+The model checkpoint and run configuration must belong to the same training run. The run configuration must contain the recorded six-class mapping.
 
-`mask_utils.py` contains the reusable mask-loading and validation utilities.
+The interface returns:
+- Predicted class index and class name.
+- Predicted-class confidence.
+- Probabilities for all six classes.
+- The preprocessing condition used.
 
-The audit records empty masks, unique pixel values, intermediate grayscale values, and foreground statistics.
+The function reuses the existing `preprocessing.py` image-processing function. The model handles its own MobileNetV2 rescaling.
 
-An empty mask is not automatically considered invalid because class 6 represents no defect.
+### Example usage
 
-The current nonzero-pixel foreground interpretation is provisional until the dataset's annotation convention is confirmed. Intermediate grayscale values must be handled consistently with the documented mask encoding before region-based experiments are interpreted scientifically.
-
-## 6. Shared Model Inference
-
-`inference.py` provides a common interface for loading the existing trained classifier and predicting an SEM image.
-
-Example:
+Run this from the project root, using a checkpoint and run-configuration file that actually exist:
 
 ```python
 from stage1_data_pipeline.inference import (
@@ -103,72 +142,62 @@ from stage1_data_pipeline.inference import (
     predict_image,
 )
 
+checkpoint = "models/original/original_seed42.keras"
+run_config = "results/original/original_seed42_run_config.json"
+
 model, class_names = load_inference_model(
-    "models/original/original_seed42.keras",
-    "results/original/original_seed42_run_config.json",
+    checkpoint,
+    run_config,
 )
 
 result = predict_image(
-    "path/to/sem_image.png",
+    "dataset/carinthia_s/raw/images/0c8af9b8e62f4cb498392e806236e5e0.jpg",
     model,
     class_names,
-    filtered=False,
 )
 
-print(result["predicted_class"])
-print(result["confidence"])
-print(result["probabilities"])
+print(result)
 ```
 
-Replace the example image path with an existing SEM image.
+The checkpoint paths above are examples based on the project's naming convention. Confirm that the selected files exist before running the example.
 
-The model checkpoint and run configuration must belong to the same training run. The configuration supplies the class mapping. The shared interface reuses the project's existing `process_image` function, including grayscale conversion, resizing, RGB conversion, and optional median filtering.
+A successful region-extraction run has been recorded. End-to-end inference with a matching checkpoint and run configuration must also be tested before claiming that inference compatibility has been fully validated.
 
-The returned dictionary contains the predicted class, predicted-class confidence, all six class probabilities, and the preprocessing version.
+## 6. Reproducibility and split discipline
 
-Confidence is the highest model probability and must not be interpreted as a guarantee of correctness.
+- Preserve the existing baseline scripts, checkpoints, and results.
+- Do not change the train/validation/test assignments for this handoff.
+- Use identical image IDs and labels when comparing original and masked conditions.
+- Record the checkpoint, run configuration, class mapping, preprocessing, and split used for every experiment.
+- Fit calibration parameters and select review thresholds using validation data only.
+- Reserve test data for final evaluation.
+- Do not retrain or alter the baseline unless a documented compatibility issue requires it.
 
-## 7. Region-Based Experiments
+## 7. Known limitations
 
-The next stage uses the same images, checkpoint, class mapping, and preprocessing to compare:
+1. **Mask semantics:** nonzero pixels are currently treated as foreground. Intermediate grayscale values exist, so this interpretation needs confirmation.
+2. **Artifact annotations:** artifact-focused extraction requires a separate artifact mask; it is not produced from the defect mask.
+3. **Distribution shift:** blacked-out regions can change image statistics and model behaviour.
+4. **Inference compatibility:** use a checkpoint and run configuration from the same training run.
+5. **Dataset availability:** the dataset is expected at `dataset/carinthia_s/raw/`, but may need to be obtained separately if it is not included in the repository.
+6. **Scientific interpretation:** prediction changes after masking are evidence to investigate, not proof that the model causally relies on a particular feature.
 
-1. Original images.
-2. Defect-only images.
-3. Background-only images.
-4. Artifact-focused images.
+## 8. Handoff to Member 2
 
-Region extraction must use the verified mask convention and preserve image-mask alignment. Artificially blacked-out regions can introduce distribution shift, so performance changes should be interpreted cautiously.
+Member 2 should receive:
 
-The region-extraction implementation and its reproducible example must be completed before this handoff is marked fully accepted.
+- `mask_utils.py`
+- `inference.py`
+- `region_extraction.py`
+- `audit_dataset.py`
+- `data_audit.csv`
+- `mask_manifest.csv`
+- `duplicate_split_conflicts.csv`
+- This README
+- Representative mask-overlay and region-extraction examples, where available
 
-## 8. Reproducibility
+Member 2 must also have access to the dataset, a compatible trained checkpoint, and its matching run configuration.
 
-For each experiment, record:
+The next stage can use this interface to compare predictions for original, defect-only, and background-only images. Artifact-focused comparisons should be added only when a separate artifact-region definition or annotation is available.
 
-- Model checkpoint and training run.
-- Class mapping.
-- Image IDs and split.
-- Preprocessing version.
-- Mask interpretation and region-extraction parameters.
-- Random seeds, where applicable.
-- Output filenames and metric definitions.
-
-The test set must remain reserved for evaluation. It must not be used to fit calibration parameters or select confidence thresholds.
-
-## 9. Limitations
-
-- Structural mask validation does not establish annotation correctness.
-- Empty masks are consistent with the no-defect class, but other mask exceptions require appropriate interpretation.
-- Intermediate grayscale values may encode more than a simple binary region.
-- Region masking can create artificial image patterns and distribution shift.
-- Model predictions and confidence scores are decision-support outputs, not substitutes for expert inspection.
-
-## 10. Handoff Status
-
-**Completed:** Dataset audit, mask manifest generation, image-mask dimension checks, duplicate checks, baseline split recording, and reusable mask utilities.
-
-**Inference interface:** Implemented; a reproducible prediction example and compatibility with the selected checkpoint must be confirmed.
-
-**Remaining before full handoff:** Region extraction for the agreed experimental conditions, a documented example, and a successful end-to-end inference sanity check.
-
-The receiving member should be able to run the documented example without changing the original baseline pipeline.
+**Current status:** dataset audit completed; region extraction successfully executed on one real image-mask pair; inference interface created; artifact-focused extraction requires a separate mask; mask semantics and end-to-end inference compatibility remain documented validation items.
