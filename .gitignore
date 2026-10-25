@@ -1,6 +1,74 @@
-dataset/raw/
-dataset/processed_original/
-dataset/processed_filtered/
-models/
+
+# ==============================
+# Python environment and cache
+# ==============================
+.venv/
+venv/
+env/
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# ==============================
+# IDE and operating system files
+# ==============================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Secrets and local environment
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Raw and processed datasets
+# Keep dataset/manifest.csv for reproducibility
+# ==============================
+/dataset/raw/
+/dataset/carinthia_s/raw/images/
+/dataset/carinthia_s/raw/masks/
+/dataset/processed_original/
+/dataset/processed_filtered/
+
+# ==============================
+# Trained model checkpoints
+# Keep training scripts and small config files
+# ==============================
+/models/*.keras
+/models/**/*.keras
+/models/*.h5
+/models/**/*.h5
+/models/*.hdf5
+/models/**/*.hdf5
+/models/**/*.weights.h5
+/models/**/saved_model/
+
+# TensorFlow-generated files
+*.ckpt
+*.ckpt.*
+checkpoint
+
+# ==============================
+# Temporary files
+# ==============================
+*.tmp
+*.temp
+*.log
+*.bak
+~$*
+
+# ==============================
+# Jupyter checkpoints
+# ==============================
+.ipynb_checkpoints/
+
+# ==============================
+# Temporary audit images
+# ==============================
+/stage2_shortcut_audit/temp/
+/stage2_shortcut_audit/tmp/
