@@ -1,0 +1,11 @@
+metric,value
+raw_nll,0.028820600570345925
+calibrated_nll,0.023813796019683947
+raw_ece_15_bins,0.007575831629311469
+calibrated_ece_15_bins,0.004367653149736305
+selected_temperature,1.559644265055016
+review_threshold,0.9
+validation_coverage,0.9840116279069767
+validation_accepted_error,0.0014771048744460858
+validation_accepted_count,677.0
+validation_review_count,11.0

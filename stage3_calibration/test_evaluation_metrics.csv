@@ -1,0 +1,17 @@
+metric,value
+test_samples,688
+temperature_from_validation,1.559644265055016
+threshold_from_validation,0.9
+raw_accuracy,0.997093023255814
+calibrated_accuracy,0.997093023255814
+raw_nll,0.009493158053901175
+calibrated_nll,0.012464300015875646
+raw_ece_15_bins,0.0032270655835976436
+calibrated_ece_15_bins,0.005473137947843718
+automatic_acceptance_coverage,0.9738372093023255
+accepted_count,670
+sent_for_review_count,18
+accepted_prediction_error,0.0
+review_rate,0.02616279069767442
+test_split,dataset/processed_original/test
+test_used_for_tuning,False
