@@ -1,0 +1,332 @@
+{
+    "original": {
+        "condition": "original",
+        "n_test": 688,
+        "accuracy": 0.936046511627907,
+        "macro_f1": 0.3902985625832068,
+        "balanced_accuracy": 0.36616507067943455,
+        "confusion_matrix": [
+            [
+                0,
+                0,
+                8,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                601,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                32,
+                11,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                2,
+                0,
+                0,
+                32
+            ]
+        ],
+        "classification_report": {
+            "1": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 8.0
+            },
+            "2": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 1.0
+            },
+            "3": {
+                "precision": 0.931782945736434,
+                "recall": 1.0,
+                "f1-score": 0.9646869983948636,
+                "support": 601.0
+            },
+            "4": {
+                "precision": 1.0,
+                "recall": 0.2558139534883721,
+                "f1-score": 0.4074074074074074,
+                "support": 43.0
+            },
+            "5": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 1.0
+            },
+            "6": {
+                "precision": 1.0,
+                "recall": 0.9411764705882353,
+                "f1-score": 0.9696969696969697,
+                "support": 34.0
+            },
+            "accuracy": 0.936046511627907,
+            "macro avg": {
+                "precision": 0.48863049095607236,
+                "recall": 0.36616507067943455,
+                "f1-score": 0.3902985625832068,
+                "support": 688.0
+            },
+            "weighted avg": {
+                "precision": 0.9258743464936002,
+                "recall": 0.936046511627907,
+                "f1-score": 0.9160829964004775,
+                "support": 688.0
+            }
+        },
+        "confusion_matrix_plot": "C:\\Users\\saumy\\Desktop\\Nanofabrication\\Defect-Detection-in-Nanofabrication\\results\\random_forest\\confusion_matrix_original.png",
+        "predictions_csv": "C:\\Users\\saumy\\Desktop\\Nanofabrication\\Defect-Detection-in-Nanofabrication\\results\\random_forest\\predictions_original.csv"
+    },
+    "defect_only": {
+        "condition": "defect_only",
+        "n_test": 688,
+        "accuracy": 0.873546511627907,
+        "macro_f1": 0.15541763641065426,
+        "balanced_accuracy": 0.16666666666666666,
+        "confusion_matrix": [
+            [
+                0,
+                0,
+                8,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                601,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                43,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                34,
+                0,
+                0,
+                0
+            ]
+        ],
+        "classification_report": {
+            "1": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 8.0
+            },
+            "2": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 1.0
+            },
+            "3": {
+                "precision": 0.873546511627907,
+                "recall": 1.0,
+                "f1-score": 0.9325058184639256,
+                "support": 601.0
+            },
+            "4": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 43.0
+            },
+            "5": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 1.0
+            },
+            "6": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 34.0
+            },
+            "accuracy": 0.873546511627907,
+            "macro avg": {
+                "precision": 0.14559108527131784,
+                "recall": 0.16666666666666666,
+                "f1-score": 0.15541763641065426,
+                "support": 688.0
+            },
+            "weighted avg": {
+                "precision": 0.7630835079772851,
+                "recall": 0.873546511627907,
+                "f1-score": 0.8145872047918884,
+                "support": 688.0
+            }
+        },
+        "confusion_matrix_plot": "C:\\Users\\saumy\\Desktop\\Nanofabrication\\Defect-Detection-in-Nanofabrication\\results\\random_forest\\confusion_matrix_defect_only.png",
+        "predictions_csv": "C:\\Users\\saumy\\Desktop\\Nanofabrication\\Defect-Detection-in-Nanofabrication\\results\\random_forest\\predictions_defect_only.csv"
+    },
+    "background_only": {
+        "condition": "background_only",
+        "n_test": 688,
+        "accuracy": 0.9273255813953488,
+        "macro_f1": 0.3563490334656469,
+        "balanced_accuracy": 0.3429092567259462,
+        "confusion_matrix": [
+            [
+                0,
+                0,
+                8,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                601,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                38,
+                5,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                2,
+                0,
+                0,
+                32
+            ]
+        ],
+        "classification_report": {
+            "1": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 8.0
+            },
+            "2": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 1.0
+            },
+            "3": {
+                "precision": 0.9231950844854071,
+                "recall": 1.0,
+                "f1-score": 0.9600638977635783,
+                "support": 601.0
+            },
+            "4": {
+                "precision": 1.0,
+                "recall": 0.11627906976744186,
+                "f1-score": 0.20833333333333334,
+                "support": 43.0
+            },
+            "5": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1-score": 0.0,
+                "support": 1.0
+            },
+            "6": {
+                "precision": 1.0,
+                "recall": 0.9411764705882353,
+                "f1-score": 0.9696969696969697,
+                "support": 34.0
+            },
+            "accuracy": 0.9273255813953488,
+            "macro avg": {
+                "precision": 0.4871991807475678,
+                "recall": 0.3429092567259462,
+                "f1-score": 0.3563490334656469,
+                "support": 688.0
+            },
+            "weighted avg": {
+                "precision": 0.9183724502554209,
+                "recall": 0.9273255813953488,
+                "f1-score": 0.8996023733414839,
+                "support": 688.0
+            }
+        },
+        "confusion_matrix_plot": "C:\\Users\\saumy\\Desktop\\Nanofabrication\\Defect-Detection-in-Nanofabrication\\results\\random_forest\\confusion_matrix_background_only.png",
+        "predictions_csv": "C:\\Users\\saumy\\Desktop\\Nanofabrication\\Defect-Detection-in-Nanofabrication\\results\\random_forest\\predictions_background_only.csv"
+    }
+}

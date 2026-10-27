@@ -1,6 +1,6 @@
 
 # ==============================
-# Python environment and cache
+# Python environments and cache
 # ==============================
 .venv/
 venv/
@@ -8,6 +8,7 @@ env/
 __pycache__/
 *.py[cod]
 *$py.class
+.ipynb_checkpoints/
 
 # ==============================
 # IDE and operating system files
@@ -26,8 +27,8 @@ desktop.ini
 !.env.example
 
 # ==============================
-# Raw and processed datasets
-# Keep dataset/manifest.csv for reproducibility
+# Datasets
+# Keep dataset/manifest.csv tracked
 # ==============================
 /dataset/raw/
 /dataset/carinthia_s/raw/images/
@@ -37,7 +38,6 @@ desktop.ini
 
 # ==============================
 # Trained model checkpoints
-# Keep training scripts and small config files
 # ==============================
 /models/*.keras
 /models/**/*.keras
@@ -47,14 +47,20 @@ desktop.ini
 /models/**/*.hdf5
 /models/**/*.weights.h5
 /models/**/saved_model/
-
-# TensorFlow-generated files
 *.ckpt
 *.ckpt.*
 checkpoint
 
+# Random Forest model files
+/models/random_forest/*.joblib
+
 # ==============================
-# Temporary files
+# Generated feature caches
+# ==============================
+/results/random_forest/*.npz
+
+# ==============================
+# Temporary files and logs
 # ==============================
 *.tmp
 *.temp
@@ -63,12 +69,7 @@ checkpoint
 ~$*
 
 # ==============================
-# Jupyter checkpoints
-# ==============================
-.ipynb_checkpoints/
-
-# ==============================
-# Temporary audit images
+# Temporary shortcut-audit files
 # ==============================
 /stage2_shortcut_audit/temp/
 /stage2_shortcut_audit/tmp/
