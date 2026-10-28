@@ -1,4 +1,4 @@
-SEM-Based Wafer-Defect Classification with MobileNetV2
+# SEM-Based Wafer-Defect Classification with MobileNetV2
 Project Overview
 This repository documents a four-stage investigation of a six-class SEM wafer-defect classification model using the Carinthia-S dataset. The stages cover data and mask preparation, shortcut-learning analysis, confidence calibration with human-review routing, and Grad-CAM interpretability and robustness testing.
 Stages
